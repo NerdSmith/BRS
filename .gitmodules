@@ -1,0 +1,6 @@
+[submodule "BRS_backend"]
+	path = BRS_backend
+	url = https://github.com/NerdSmith/BRS_backend.git
+[submodule "brs_frontend"]
+	path = brs_frontend
+	url = https://github.com/NerdSmith/brs_frontend.git
