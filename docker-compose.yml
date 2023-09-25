@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+  web:
+    build: 
+      context: ./BRS_backend
+      dockerfile: Dockerfile
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:7000
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - comm_volume:/home/app/web
+    expose:
+      - 7000
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+  db:
+    image: postgres:13.0-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.db
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    ports:
+      - 7000:80
+    depends_on:
+      - web
+  front:
+    build:
+      context: ./brs_frontend
+      dockerfile: Dockerfile
+    volumes:
+      - comm_volume:/home/app/web
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
+  comm_volume:
